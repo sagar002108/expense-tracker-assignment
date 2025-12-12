@@ -32,7 +32,7 @@ function App() {
   const [filter, setFilter] = useState('7days'); 
   const [customMonth, setCustomMonth] = useState(new Date().toISOString().slice(0, 7)); // Default to current YYYY-MM
 
-  const API_URL = "https://expense-tracker-assignment-1bd0.onrender.com/api/v1";
+  const API_URL = "/api/v1";
 
   const getExpenses = async () => {
     try {

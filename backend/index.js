@@ -1,9 +1,9 @@
 const express = require('express');
 const cors = require('cors');
 const mongoose = require('mongoose');
-const app = express();
-const router = require('./routes/transactions');
+const path = require('path'); // <--- 1. ADD THIS IMPORT
 
+const app = express();
 require('dotenv').config();
 
 const PORT = process.env.PORT || 5000;
@@ -12,11 +12,19 @@ const PORT = process.env.PORT || 5000;
 app.use(express.json());
 app.use(cors());
 
-// Routes
+// API Routes
+const router = require('./routes/transactions');
 app.use('/api/v1', router);
 
-// Database Connection
-const MONGO_URL = process.env.MONGO_URL || "mongodb://localhost:27017/expense_tracker_db"; // Make sure Mongo is running!
+// --- 2. ADD THIS SECTION: SERVE FRONTEND ---
+app.use(express.static(path.join(__dirname, 'public')));
+
+app.get('*', (req, res) => {
+    res.sendFile(path.join(__dirname, 'public', 'index.html'));
+});
+// -------------------------------------------
+
+const MONGO_URL = process.env.MONGO_URL;
 
 mongoose.connect(MONGO_URL)
     .then(() => {
