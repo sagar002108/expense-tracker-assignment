@@ -32,12 +32,14 @@ function App() {
   const [filter, setFilter] = useState('7days'); 
   const [customMonth, setCustomMonth] = useState(new Date().toISOString().slice(0, 7)); // Default to current YYYY-MM
 
-
-const API_URL = "https://expense-tracker-assignment-1bd0.onrender.com/api/v1";
+  // --- 1. API CONFIGURATION ---
+  // Ensure this matches your Render Backend exactly. 
+  // If your backend routes are /add-expense, change 'income' to 'expense' below.
+  const API_URL = "https://expense-tracker-assignment-1bd0.onrender.com/api/v1";
 
   const getExpenses = async () => {
     try {
-     
+      // NOTE: Verify if your backend route is 'get-incomes' or 'get-expenses'
       const res = await axios.get(`${API_URL}/get-incomes`);
       setExpenses(res.data);
     } catch (err) {
@@ -56,22 +58,25 @@ const API_URL = "https://expense-tracker-assignment-1bd0.onrender.com/api/v1";
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      
+      // --- 2. ADDING EXPENSE ---
       await axios.post(`${API_URL}/add-income`, formData);
       getExpenses();
       setFormData({ title: '', amount: '', category: '', date: '', description: '' });
+      alert("Expense Added Successfully!"); // Visual confirmation
     } catch (err) {
-      alert("Error adding expense");
+      console.error("Error adding:", err);
+      // improved error alerting
+      alert(`Error adding expense: ${err.response?.data?.message || err.message}`);
     }
   };
 
   const handleDelete = async (id) => {
     try {
-      
       await axios.delete(`${API_URL}/delete-income/${id}`);
       getExpenses();
     } catch (err) {
-      console.error(err);
+      console.error("Error deleting:", err);
+      alert("Could not delete item.");
     }
   };
 
